@@ -32,7 +32,7 @@ list_user = users.to_json(orient='index')
 list_movie = movies.to_json(orient='index')
 # dataset = pd.merge(pd.merge(movies, ratings),users)
 # Break up the big genre string into a string array
-movies['genres'] = movies['genres'].str.split('|')
+movies['genres'] = movies['genres'].astype(str).str.split('|')
 # Convert genres to string value
 movies['genres'] = movies['genres'].fillna("").astype('str')
 from sklearn.feature_extraction.text import TfidfVectorizer
