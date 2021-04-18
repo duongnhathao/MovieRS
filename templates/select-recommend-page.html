@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include 'partials/head.html' %}
+<body>
+<div class="bg-video-wrap">
+    <video src="{{ url_for('static',filename='video/trailer.mp4') }}" loop muted autoplay>
+    </video>
+    <div class="overlay">
+        r23r2r23r
+    </div>
+    <div class="over">
+
+        <!-- partials:index.partials.html -->
+        <!-- Hamburger -->
+
+
+        <!-- Menu -->
+
+        {% include 'partials/menu.html' %}
+        <!-- Demo -->
+        <div class="movie background-custom">
+                <h2 class="text-20">Movie Recommendation System</h2>
+            <div class="list-group custom-list-group">
+                <a href="{{ url_for('recommend_for_user') }}" class="list-group-item list-group-item-action">
+                    <p class="mb-1">Predict rating for user id and movie id</p>
+                    <small class="text-muted">Movie Lens 1M and SVD</small>
+                </a>
+                <a href="{{ url_for('recommenforuser') }}" class="list-group-item list-group-item-action">
+                    <p class="mb-1">Content Base Recommend System</p>
+                    <small class="text-muted">Movie Lens 1M</small>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
+        integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"
+        integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
+        crossorigin="anonymous"></script>
+<script>
+    // Menu
+    const Menu = (() => {
+        let s;
+
+        return {
+            settings() {
+                return {
+                    body: $('body'),
+                    hamburger: $('.hamburger'),
+                    open: 'js-menu-open',
+                    visible: 'js-menu-visible',
+                    overflow: 'js-overflow',
+                    width: $(window).width(),
+                    prevWidth: $(window).width()
+                };
+
+            },
+
+            init() {
+                s = this.settings();
+                this.bindEvents();
+            },
+
+            bindEvents() {
+                let menuContainerWidth;
+
+                if (s.width < 864) {
+                    menuContainerWidth = 100;
+                } else if (s.width < 1456) {
+                    menuContainerWidth = 50;
+                } else {
+                    menuContainerWidth = 45;
+                }
+
+                $(window).on('resize', () => {
+                    s.width = $(window).width();
+
+                    if (s.width < 864) {
+                        menuContainerWidth = 100;
+                    } else if (s.width < 1456) {
+                        menuContainerWidth = 50;
+                    } else {
+                        menuContainerWidth = 45;
+                    }
+                });
+
+                s.hamburger.on('click', () => {
+                    Menu.toggleMenu(menuContainerWidth);
+                });
+
+                s.body.on('keyup', e => {
+                    if (s.body.hasClass(s.open) && e.which === 27) {
+                        Menu.toggleMenu(menuContainerWidth);
+                    }
+                });
+            },
+
+            toggleMenu(width) {
+                s.hamburger.toggleClass('js-hamburger');
+                s.body.toggleClass(s.open);
+                s.body.toggleClass(s.overflow);
+
+                // Opening transition
+                if (s.body.hasClass(s.open)) {
+                    s.prevWidth = width;
+
+                    anime.timeline({
+                        easing: 'easeOutQuart',
+                        duration: 600,
+                        begin() {
+                            $('.menu__img').css('left', `${width}%`);
+                            s.body.addClass(s.visible);
+                        }
+                    }).add({
+                        targets: '.menu__container',
+                        width: [0, `${width}%`]
+                    }).add({
+                            targets: '.menu__img',
+                            width: [0, `${100 - width}%`]
+                        },
+                        0);
+                }
+
+                // Closing transition
+                if (!s.body.hasClass(s.open)) {
+                    anime.timeline({
+                        easing: 'easeInQuart',
+                        duration: 600,
+                        delay: 200,
+                        complete() {
+                            s.body.removeClass(s.visible);
+                        }
+                    }).add({
+                        targets: '.menu__container',
+                        width: [`${s.prevWidth}%`, 0]
+                    }).add({
+                            targets: '.menu__img',
+                            width: [`${100 - s.prevWidth}%`, 0]
+                        },
+                        0);
+                }
+            }
+        };
+
+    })();
+
+    // Inits
+    $(() => {
+        // Spanize
+        const span = $('.js-span');
+        let $ele, words;
+
+        for (let i = 0; i < span.length; i++) {
+            $ele = $(span).eq(i);
+            words = $ele.html();
+
+            $ele.html(words.replace(/([A-z0-9'@+-<>.,'"“”‘’?!*&/]+)/g, '<span>$&</span>'));
+        }
+
+        Menu.init();
+    });
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include 'partials/head.html' %}
+<body>
+<div class="bg-video-wrap">
+    <video src="{{ url_for('static',filename='video/trailer.mp4') }}" loop muted autoplay>
+    </video>
+    <div class="overlay">
+        r23r2r23r
+    </div>
+    <div class="over">
+
+        <!-- partials:index.partials.html -->
+        <!-- Hamburger -->
+
+
+        <!-- Menu -->
+
+        {% include 'partials/menu.html' %}
+        <!-- Demo -->
+        <div class="movie background-custom custom-movie">
+           {% if movie %}
+                <div class="">
+                    <a href="{{ url_for('index') }}" class="btn movie_button mb-5">
+
+                        Home
+                    </a>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="card bg-dark text-white">
+                            {%if movie['poster'] %}
+                            <img class="card-img" src="{{movie['poster'] }}"   alt="Card image">
+                            {%else%}
+                            <img class="card-img" src="{{url_for('static',filename='video/temp.jpg')}}"   alt="Card image">
+                            {%endif%}
+                            <div class="card-img-overlay">
+                                <h5 class="card-title">{{movie['title']}}</h5>
+                                <p class="card-text">{{movie['year']}}</p>
+                                <p class="card-text">{{movie['imdb_rating']}}/10 IMDB Rating</p>
+                                {%if predict['actual'] and predict['actual']>0 %}
+                                <div class="movie_rating"><span>Rated</span><br>{{predict['actual']}}<i>/</i> 5 </div>
+                                {%endif%}
+                                {%if predict['pred'] %}
+                                <div class="movie_rating"> <span>Predict</span><br>{{predict['pred']}} <i> / </i> 5</div>
+                                {%endif%}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-7 text-align-left">
+                        <div class="user-info-title">User Information</div>
+                        <div class="user-info">Age : {{age}}</div>
+                        {%if male=='M' %}
+                        <div class="user-info">Gender : Male</div>
+                        {%else%}
+                        <div class="user-info">Gender : Female</div>
+                        {%endif%}
+                        <div class="user-info">Location : </div>
+                        <div class="mapouter"><div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q={{location}}&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://www.whatismyip-address.com"></a><br><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}</style><a href="https://www.embedgooglemap.net">add google map to html</a><style>.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div></div>
+                    </div>
+                </div>
+            {% else %}
+                        Not found
+            {% endif %}
+        <input type="hidden" value="{{list_item}}">
+        </div>
+    </div>
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
+        integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"
+        integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
+        crossorigin="anonymous"></script>
+<script>
+    // Menu
+    const Menu = (() => {
+        let s;
+
+        return {
+            settings() {
+                return {
+                    body: $('body'),
+                    hamburger: $('.hamburger'),
+                    open: 'js-menu-open',
+                    visible: 'js-menu-visible',
+                    overflow: 'js-overflow',
+                    width: $(window).width(),
+                    prevWidth: $(window).width()
+                };
+
+            },
+
+            init() {
+                s = this.settings();
+                this.bindEvents();
+            },
+
+            bindEvents() {
+                let menuContainerWidth;
+
+                if (s.width < 864) {
+                    menuContainerWidth = 100;
+                } else if (s.width < 1456) {
+                    menuContainerWidth = 50;
+                } else {
+                    menuContainerWidth = 45;
+                }
+
+                $(window).on('resize', () => {
+                    s.width = $(window).width();
+
+                    if (s.width < 864) {
+                        menuContainerWidth = 100;
+                    } else if (s.width < 1456) {
+                        menuContainerWidth = 50;
+                    } else {
+                        menuContainerWidth = 45;
+                    }
+                });
+
+                s.hamburger.on('click', () => {
+                    Menu.toggleMenu(menuContainerWidth);
+                });
+
+                s.body.on('keyup', e => {
+                    if (s.body.hasClass(s.open) && e.which === 27) {
+                        Menu.toggleMenu(menuContainerWidth);
+                    }
+                });
+            },
+
+            toggleMenu(width) {
+                s.hamburger.toggleClass('js-hamburger');
+                s.body.toggleClass(s.open);
+                s.body.toggleClass(s.overflow);
+
+                // Opening transition
+                if (s.body.hasClass(s.open)) {
+                    s.prevWidth = width;
+
+                    anime.timeline({
+                        easing: 'easeOutQuart',
+                        duration: 600,
+                        begin() {
+                            $('.menu__img').css('left', `${width}%`);
+                            s.body.addClass(s.visible);
+                        }
+                    }).add({
+                        targets: '.menu__container',
+                        width: [0, `${width}%`]
+                    }).add({
+                            targets: '.menu__img',
+                            width: [0, `${100 - width}%`]
+                        },
+                        0);
+                }
+
+                // Closing transition
+                if (!s.body.hasClass(s.open)) {
+                    anime.timeline({
+                        easing: 'easeInQuart',
+                        duration: 600,
+                        delay: 200,
+                        complete() {
+                            s.body.removeClass(s.visible);
+                        }
+                    }).add({
+                        targets: '.menu__container',
+                        width: [`${s.prevWidth}%`, 0]
+                    }).add({
+                            targets: '.menu__img',
+                            width: [`${100 - s.prevWidth}%`, 0]
+                        },
+                        0);
+                }
+            }
+        };
+
+    })();
+
+    // Inits
+    $(() => {
+        // Spanize
+        const span = $('.js-span');
+        let $ele, words;
+
+        for (let i = 0; i < span.length; i++) {
+            $ele = $(span).eq(i);
+            words = $ele.html();
+
+            $ele.html(words.replace(/([A-z0-9'@+-<>.,'"“”‘’?!*&/]+)/g, '<span>$&</span>'));
+        }
+
+        Menu.init();
+    });
+</script>
+
+
+</body>
+
+</html>
