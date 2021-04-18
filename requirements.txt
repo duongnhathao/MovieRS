@@ -5,6 +5,7 @@ Flask-RESTful==0.3.7
 joblib==0.13.2 
 jsonschema==2.6.0 
 
+pandas
 pickleshare==0.7.5
 
 requests-file==1.4.3 
