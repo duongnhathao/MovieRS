@@ -16,5 +16,4 @@ scipy
 matplotlib
 omdb
 pickle5
-math
 
