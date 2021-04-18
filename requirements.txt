@@ -23,4 +23,4 @@ matplotlib
 omdb
 pickle
 math
-scipy
+
