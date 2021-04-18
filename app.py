@@ -44,19 +44,19 @@ cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
 titles = movies['title']
 indices = pd.Series(movies.index, index=movies['title'])
  
-if os.path.isfile('./model/item_based_model.sav'):
-        filename = './model/item_based_model.sav'
-        svd_model = rs.load_model(filename)
-        print("\n\nModel load with RMSE : ", svd_model.RMSE(),'\n\n\n')
-else:
-    svd = rs.SVD(ratings, movies, K = 50, user_based = 0)
-    #Fit model tập dữ liệu
-    svd.fit()
-    #Save model
-    filename = './model/item_based_model.sav'
-    rs.save_model(svd, filename)
-    svd_model = rs.load_model(filename)
-    print("\n\nModel load with RMSE : ", svd_model.RMSE(),'\n\n')
+# if os.path.isfile('./model/item_based_model.sav'):
+#         filename = './model/item_based_model.sav'
+#         svd_model = rs.load_model(filename)
+#         print("\n\nModel load with RMSE : ", svd_model.RMSE(),'\n\n\n')
+# else:
+svd = rs.SVD(ratings, movies, K = 50, user_based = 0)
+#Fit model tập dữ liệu
+svd.fit()
+#Save model
+# filename = './model/item_based_model.sav'
+# rs.save_model(svd, filename)
+svd_model = svd.fit()
+print("\n\nModel load with RMSE : ", svd_model.RMSE(),'\n\n')
 
 # count = CountVectorizer(stop_words='english')
 # count_matrix = count.fit_transform(df2['soup'])
