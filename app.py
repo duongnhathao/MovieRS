@@ -18,7 +18,7 @@ geolocator = Nominatim(user_agent="geoapiExercises")
 
 app = flask.Flask(__name__, template_folder='templates')
 
-df2 = pd.read_csv('./model/tmdb.csv')
+# df2 = pd.read_csv('./model/tmdb.csv')
 
 # if using the module level client
 omdb.set_default('apikey', '101ed70')
