@@ -6,7 +6,7 @@ from scipy.sparse.linalg import svds
 from sklearn.metrics import mean_squared_error
 from math import sqrt
 import json
-import pickle
+import pickle5 as pickle
 
 # Reading ratings file
 #ratings = pd.read_csv("/content/drive/MyDrive/nam 4/hk2/BI/final/demo/dataset/ml-1m/ml-1m/ratings.dat", sep='::', encoding='latin-1', names=['user_id', 'movie_id', 'rating', 'timestamp'])
