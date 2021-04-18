@@ -30,7 +30,7 @@ movies = pd.read_csv('./model/movies.dat', sep='::', encoding='latin-1', names=[
 
 list_user = users.to_json(orient='index')
 list_movie = movies.to_json(orient='index')
-dataset = pd.merge(pd.merge(movies, ratings),users)
+# dataset = pd.merge(pd.merge(movies, ratings),users)
 # Break up the big genre string into a string array
 movies['genres'] = movies['genres'].str.split('|')
 # Convert genres to string value
@@ -203,52 +203,52 @@ def redict_top_movie_for_user():
 
  
 
-@app.route('/search-movie-for-recommend',methods=['GET','POST'])
+# @app.route('/search-movie-for-recommend',methods=['GET','POST'])
 
 
-def demo():
-    if flask.request.method == 'GET':
-        return flask.render_template('search-movie.html')
-    if flask.request.method == 'POST':
-        m_name = flask.request.form['movie_name']
-        m_name = m_name.title()
-        movie = search_movie_with_title(m_name)
-        if movie:
-            print(movie)
-            replace_name = str(movie['title'])+" ("+str(movie['year'])+")"
-            arr = []
+# def demo():
+#     if flask.request.method == 'GET':
+#         return flask.render_template('search-movie.html')
+#     if flask.request.method == 'POST':
+#         m_name = flask.request.form['movie_name']
+#         m_name = m_name.title()
+#         movie = search_movie_with_title(m_name)
+#         if movie:
+#             print(movie)
+#             replace_name = str(movie['title'])+" ("+str(movie['year'])+")"
+#             arr = []
 
-            if replace_name in titles.tolist():
-                print("Recommend Movie Name",genre_recommendations(replace_name))
-                for i in genre_recommendations(replace_name).head(20):
-                    word_list = i.split(' ') 
+#             if replace_name in titles.tolist():
+#                 print("Recommend Movie Name",genre_recommendations(replace_name))
+#                 for i in genre_recommendations(replace_name).head(20):
+#                     word_list = i.split(' ') 
 
-                    year = word_list[-1]
-                    year = year.replace('(','')
-                    year = year.replace(')','')
-                    text = i.rsplit(' ', 1)[0]
-                    while text.find("(")>0:
-                        text = text.rsplit(' ', 1)[0]
-                    text = text.rsplit(',', 1)[0]
-                    movie_search = {}
+#                     year = word_list[-1]
+#                     year = year.replace('(','')
+#                     year = year.replace(')','')
+#                     text = i.rsplit(' ', 1)[0]
+#                     while text.find("(")>0:
+#                         text = text.rsplit(' ', 1)[0]
+#                     text = text.rsplit(',', 1)[0]
+#                     movie_search = {}
                     
-                    movie_search = search_movie_with_title(text,year)
-                    print('\n\n',text,'\n',year)
-                    print(movie_search)
-                    if movie_search:
-                        arr.append(movie_search)
-                    else:
-                        temp ={'title':text,'year':year}
-                        arr.append(temp)
-                for i in arr:
-                    print(i,'\n')
-                print(arr)
-                # return json.dumps(arr)
-                return flask.render_template('list-recommend.html',list_item=arr)
-            else:
-                return(flask.render_template('negative.html',name=replace_name,list_name=titles.tolist()))
-        else:
-                return(flask.render_template('negative.html',name=m_name,list_name=titles.tolist()))
+#                     movie_search = search_movie_with_title(text,year)
+#                     print('\n\n',text,'\n',year)
+#                     print(movie_search)
+#                     if movie_search:
+#                         arr.append(movie_search)
+#                     else:
+#                         temp ={'title':text,'year':year}
+#                         arr.append(temp)
+#                 for i in arr:
+#                     print(i,'\n')
+#                 print(arr)
+#                 # return json.dumps(arr)
+#                 return flask.render_template('list-recommend.html',list_item=arr)
+#             else:
+#                 return(flask.render_template('negative.html',name=replace_name,list_name=titles.tolist()))
+#         else:
+#                 return(flask.render_template('negative.html',name=m_name,list_name=titles.tolist()))
 
 if __name__ == '__main__':
     app.config['ENV'] = 'development'
