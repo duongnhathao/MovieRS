@@ -13,7 +13,6 @@ scipy
 
 
 
-json
 matplotlib
 omdb
 pickle
